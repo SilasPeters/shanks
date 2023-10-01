@@ -16,10 +16,11 @@ namespace Shanks
 
 		public static void Main(string[] args)
 		{
-			modulus      = BigInteger.Parse(Console.ReadLine()); // Max 318 numbers, modulus
-			@base        = BigInteger.Parse(Console.ReadLine()); // Max 318 numbers, base
-			order        = BigInteger.Parse(Console.ReadLine()); // Max 60 numbers, order
-			numberOfKeys = int.Parse(Console.ReadLine());        // Max 6 numbers, amount of keys to crack
+			char[] legalCharacters = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			modulus      = BigInteger.Parse(Console.ReadLine().TakeWhile(c => legalCharacters.Contains(c)).ToArray()); // Max 318 numbers, modulus
+			@base        = BigInteger.Parse(Console.ReadLine().TakeWhile(c => legalCharacters.Contains(c)).ToArray()); // Max 318 numbers, base
+			order        = BigInteger.Parse(Console.ReadLine().TakeWhile(c => legalCharacters.Contains(c)).ToArray()); // Max 60 numbers, order
+			numberOfKeys = int.Parse(Console.ReadLine().TakeWhile(c => legalCharacters.Contains(c)).ToArray());        // Max 6 numbers, amount of keys to crack
 			bigStepSize  = FastSquareRoot(order / numberOfKeys);
 			bigStepValue = BigInteger.ModPow(@base, bigStepSize, modulus);
 
@@ -27,7 +28,7 @@ namespace Shanks
 
 			Span<BigInteger> keys = new BigInteger[numberOfKeys];
 			for (int i = 0; i < numberOfKeys; i++)
-				keys[i] = int.Parse(Console.ReadLine().TakeWhile(c => c != ' ').ToArray());
+				keys[i] = BigInteger.Parse(Console.ReadLine().TakeWhile(c => legalCharacters.Contains(c)).ToArray());
 
 			for (int i = 0; i < numberOfKeys; i++)
 			{
@@ -38,8 +39,10 @@ namespace Shanks
 
 		static BigInteger FastSquareRoot(BigInteger bigInteger)
 		{
-			long n = bigInteger.GetBitLength();
-			return bigInteger >> (int)(n / 2); // TODO using int might be a problem
+			int        bits = 0;
+			BigInteger i    = 1;
+			while (i << bits < bigInteger) { bits += 1; }
+			return bigInteger >> (bits / 2);
 		}
 
 		static Dictionary<BigInteger, BigInteger> CreateIndex()
