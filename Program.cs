@@ -66,6 +66,7 @@ namespace Shanks
 				if (index.TryGetValue(x, out BigInteger exponent)) {
 					var result = exponent - smallSteps;
 					x = result >= 0 ? result : order - smallSteps;
+					return;
 					// When the result is negative, this means we found the exponent 0 in the index. Thus, to find
 					// the discrete log, we need to subtract the smallSteps from the order of the group instead of 0.
 				}
