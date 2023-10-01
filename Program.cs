@@ -25,7 +25,7 @@ namespace Shanks
 			bigStepValue    = BigInteger.ModPow(@base, bigStepExponent, modulus);
 
 			// Key: power, Value: exponent
-			Dictionary<BigInteger, BigInteger> index = CreateIndex();
+			Dictionary<BigInteger, long> index = CreateIndex();
 
 			BigInteger[] keys = new BigInteger[numberOfKeys];
 			for (int i = 0; i < numberOfKeys; i++)
@@ -47,23 +47,23 @@ namespace Shanks
 			return bigInteger >> (bits / 2);
 		}
 
-		static Dictionary<BigInteger, BigInteger> CreateIndex()
+		static Dictionary<BigInteger, long> CreateIndex()
 		{
-			Dictionary<BigInteger, BigInteger> index = new Dictionary<BigInteger, BigInteger>();
+			Dictionary<BigInteger, long> index = new Dictionary<BigInteger, long>();
 
 			index.Add(1, 0);
 			BigInteger power = 1;
-			BigInteger bigSteps = order / bigStepExponent;
+			long bigSteps = (long) (order / bigStepExponent);
 			for (BigInteger i = 1; i < bigSteps + 1; i++)
-				index.Add(power = power * bigStepValue % modulus, i * bigStepExponent);
+				index.Add(power = power * bigStepValue % modulus, (long) (i * bigStepExponent));
 
 			return index;
 		}
 
-		static void DiscreteLog(ref BigInteger x, ref Dictionary<BigInteger, BigInteger> index)
+		static void DiscreteLog(ref BigInteger x, ref Dictionary<BigInteger, long> index)
 		{
 			for (BigInteger smallSteps = 0; smallSteps < bigStepExponent; smallSteps++, x = x * @base % modulus)
-				if (index.TryGetValue(x, out BigInteger exponent)) {
+				if (index.TryGetValue(x, out var exponent)) {
 					var result = exponent - smallSteps;
 					x = result >= 0 ? result : order - smallSteps;
 					return;
