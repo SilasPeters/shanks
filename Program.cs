@@ -49,11 +49,11 @@ namespace Shanks
 
 		static Dictionary<BigInteger, long> CreateIndex()
 		{
-			Dictionary<BigInteger, long> index = new Dictionary<BigInteger, long>();
-
-			index.Add(1, 0);
 			BigInteger power = 1;
 			long bigSteps = order / bigStepExponent;
+			Dictionary<BigInteger, long> index = new Dictionary<BigInteger, long>((int)bigSteps);
+
+			index.Add(1, 0);
 			for (BigInteger i = 1; i < bigSteps + 1; i++)
 				index.Add(power = power * bigStepValue % modulus, (long) (i * bigStepExponent));
 
